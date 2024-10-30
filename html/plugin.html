@@ -1,0 +1,151 @@
+<div layout="column" ng-app="plugin" ng-controller="pluginCtrl" class="md-padding" ng-cloak>
+
+    <div layout="row" layout-xs="column" layout-sm="column">
+        <div flex>
+            <md-card flex class="md-padding">
+                <div layout="row">
+                    <i class="material-icons center-v">storage</i>
+                    <h1 class="margin-left-sm">{{translations.titleExistingRules[holder.language]}}</h1>
+                    <div flex></div>
+                    <md-progress-circular ng-if="holder.loading" md-mode="indeterminate"></md-progress-circular>
+                </div>
+                <div flex-gt-md="60" layout="row" layout-align="start start" style="margin-bottom: 15px; margin-right: 20px; color: #ababab">
+                    <i class="material-icons">info</i>
+                    <p style="margin-left:10px; margin-top:0px; text-align: justify" layout="row">{{translations.savedRuleDescription[holder.language]}}</p>
+                </div>
+
+                <div ng-show="!holder.loading">
+                    <div layout="row" class="table-header" id="rules-table-header"
+                         layout-align="start center">
+                        <div class="thead-item margin-left-sm column-padding column-role" ng-click="sort('role')"
+                             md-ink-ripple ng-class="{'selected':orderByExpression==='role'}">
+                            <i class="fa" ng-class="getSortClass('role')"></i><span class="bold">{{translations.role[holder.language]}}</span>
+                            <md-tooltip md-delay="500">
+                                {{translations.roleLabelTooltip[holder.language]}}
+                            </md-tooltip>
+                        </div>
+                        <div class="thead-item margin-left-sm column-padding column-min-value"
+                             ng-click="sort('min_value')"
+                             md-ink-ripple ng-class="{'selected':orderByExpression==='min_value'}">
+                            <i class="fa" ng-class="getSortClass('min_value')"></i><span class="bold">Min</span>
+                            <md-tooltip md-delay="500">
+                                {{translations.minLabelTooltip[holder.language]}}
+                            </md-tooltip>
+                        </div>
+                        <div class="thead-item margin-left-sm column-padding column-max-value"
+                             ng-click="sort('max_value')"
+                             md-ink-ripple ng-class="{'selected':orderByExpression==='max_value'}">
+                            <i class="fa" ng-class="getSortClass('max_value')"></i><span class="bold">Max</span>
+                            <md-tooltip md-delay="500">
+                                {{translations.maxLabelTooltip[holder.language]}}
+                            </md-tooltip>
+                        </div>
+                        <div flex></div>
+                        <div class="search-bar">
+                            <md-input-container class="no-error no-margin ">
+                                <label>{{translations.searchTerm[holder.language]}}</label>
+                                <input ng-model="holder.ruleSearchTerm">
+                            </md-input-container>
+                        </div>
+                    </div>
+
+                    <div animate staging="50"
+                         ng-class="{ 'selected-rule': persistedRule.id === holder.rule.id }"
+                         ng-repeat="persistedRule in holder.persistedRules | filter:holder.ruleSearchTerm |orderBy:orderByExpression:reverse"
+                         class="repeated-item not-clickable tbody-item"
+                         flex layout="row"
+                         layout-align="start center">
+
+                        <div class="one-line column-padding column-role">{{persistedRule.role.title}}</div>
+                        <div class="one-line column-padding column-min-value">{{persistedRule.min_value}}</div>
+                        <div class="one-line column-padding column-max-value">{{persistedRule.max_value}}</div>
+                        <div flex></div>
+                        <div>
+                            <md-button class="md-icon-button md-primary icon rule-button" ng-click="applyRuleInForm(persistedRule)">
+                                <i class="material-icons">mode_edit</i>
+                            </md-button>
+                            <md-button class="md-icon-button md-warn icon rule-button" ng-click="deleteRule(persistedRule, $index)">
+                                <i class="material-icons">delete</i>
+                            </md-button>
+                        </div>
+                    </div>
+                    <p class="one-line column-padding" ng-if="(!holder.persistedRules || holder.persistedRules.length < 1) && !holder.loading">{{translations.noRulesDefinedMessage[holder.language]}}</p>
+                </div>
+            </md-card>
+        </div>
+
+        <!-- RIGHT CARD -->
+        <div flex-sm="100" flex-xs="100" flex="40">
+            <md-card flex class="md-padding add-and-edit-card">
+                <form ng-disabled="holder.roles.length < 1" ng-submit="saveOrUpdateRule(holder.rule)" name="ruleForm">
+                    <div layout="row">
+                        <i class="material-icons center-v">mode_edit</i>
+                        <h1 class="margin-left-sm margin-bottom-sm">{{translations.titleAddEditRule[holder.language]}}</h1>
+                    </div>
+                    <div layout="row" layout-align="start start" style="margin-bottom: 15px; margin-right: 20px; color: #ababab">
+                        <i class="material-icons">info</i>
+                        <p style="margin-left:10px; margin-top:0px; text-align: justify" layout="row">{{translations.editRuleDescription[holder.language]}}</p>
+                    </div>
+                    <div class="warning" layout="row" layout-align="start center"
+                         ng-if="holder.roles.length < 1 && holder.init">
+                        <i class="material-icons warning-icon">warning</i>
+                        <p>{{translations.noRolesAvailableRemark[holder.language]}}</p></div>
+
+                    <div ng-if="holder.roles.length > 0 && !holder.saving && !holder.loading" class="margin-top-sm" layout="column">
+                        <div layout="row">
+                            <h3>{{translations.pleaseSelectARole[holder.language]}}</h3>
+                        </div>
+                        <md-input-container>
+                            <md-radio-group required ng-model="holder.rule.role" name="roleSelect">
+                                <div ng-repeat='r in holder.roles' class="row">
+                                    <md-radio-button ng-value="r" class="md-primary margin-left-sm">{{r.title}}
+                                    </md-radio-button>
+                                </div>
+                                <div ng-messages="ruleForm.roleSelect.$error">
+                                    <div ng-message="required">{{translations.pleaseSelectARole[holder.language]}}</div>
+                                </div>
+                            </md-radio-group>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>min</label>
+                            <input ng-disabled="holder.roles.length < 1" min="1"
+                                   max="{{holder.rule.max_value}}" value="1" required name="minInput" type="number"
+                                   ng-model="holder.rule.min_value">
+                            <div ng-messages="ruleForm.minInput.$error">
+                                <div ng-if="ruleForm.minInput.$touched" ng-message="required">{{translations.pleaseEnterMinValue[holder.language]}}</div>
+                                <div ng-if="ruleForm.minInput.$touched" ng-message="min">{{translations.valueMustbeAtLeast[holder.language]}} 1</div>
+                                <div ng-if="ruleForm.minInput.$touched" ng-message="max">{{translations.valueCanNotExceed[holder.language]}} {{holder.rule.max_value}}</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>max</label>
+                            <input md-is-error="holder.roles.length < 1" ng-disabled="holder.roles.length < 1"
+                                   min="{{holder.rule.min_value}}" required name="maxInput" type="number"
+                                   ng-model="holder.rule.max_value">
+                            <div ng-messages="ruleForm.maxInput.$error">
+                                <div ng-show="ruleForm.maxInput.$touched" ng-message="required">{{translations.pleaseEnterMaxValue[holder.language]}}</div>
+                                <div ng-show="ruleForm.maxInput.$touched" ng-message="min">{{translations.valueMustBeAtLeast[holder.language]}} {{holder.rule.min_value}}</div>
+                            </div>
+                        </md-input-container>
+                    </div>
+                    <div ng-if="holder.roles.length > 0" layout="row" class="margin-top-md">
+                        <md-progress-circular ng-if="holder.saving" md-mode="indeterminate"></md-progress-circular>
+                        <div flex></div>
+                        <md-button layout="row" layout-align="start center"
+                                   ng-disabled="!holder.rule.id && !holder.rule.role && !holder.rule.min_value && !holder.rule.max_value"
+                                   class="md-warn" ng-click="clearRuleForm()">
+                            <i class="material-icons">close</i>
+                            <span class="margin-left-sm">{{translations.clearForm[holder.language]}}</span>
+                        </md-button>
+                        <md-button layout="row" layout-align="start center" ng-disabled="ruleForm.$invalid"
+                                   class="md-raised md-primary" type="submit">
+                            <i class="material-icons">save</i>
+                            <span class="margin-left-sm">{{translations.save[holder.language]}}</span>
+                        </md-button>
+                    </div>
+                </form>
+            </md-card>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,177 @@
+body {
+    min-height: 1000px !important;
+}
+.padding-top-sm {
+    padding-top: 10px;
+}
+
+.padding-top-md {
+    padding-top: 20px;
+}
+
+.padding-top-lg {
+    padding-top: 30px;
+}
+
+.padding-left-sm {
+    padding-left: 10px;
+}
+
+.padding-top-md {
+    padding-left: 20px;
+}
+
+.padding-top-lg {
+    padding-left: 30px;
+}
+
+.margin-top-sm {
+    margin-top: 10px;
+}
+
+.margin-top-md {
+    margin-top: 20px;
+}
+
+.margin-top-lg {
+    margin-top: 30px;
+}
+
+.margin-right-sm {
+    margin-right: 10px;
+}
+
+.margin-right-md {
+    margin-right: 20px;
+}
+
+.margin-right-lg {
+    margin-right: 30px;
+}
+
+.margin-left-sm {
+    margin-left: 10px;
+}
+
+.margin-left-md {
+    margin-left: 20px;
+}
+
+.margin-left-lg {
+    margin-left: 30px;
+}
+
+.margin-side-sm {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.margin-side-md {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.padding-side-md {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.margin-side-lg {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+md-input-container {
+    margin-bottom: 4px;
+}
+
+.center-h {
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.center-v {
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+}
+
+.search-header {
+    color: #202020 !important;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.check-my-devices-button {
+    background-color: #0097d2 !important;
+    margin-left: 15px !important;
+}
+
+.dialog {
+    max-width: 1280px;
+    width: 100%;
+}
+
+.md-dialog-container {
+    /*z-index: 301;*/
+}
+
+#vertical-container {
+    height: 600px;
+}
+
+#vertical-container-rules {
+    height: 250px;
+}
+
+.odd {
+    background-color: #dddddd;
+}
+.even {
+    background-color: white;
+}
+
+.selected-rule {
+    background: #0073aa;
+    color: white !important;
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.number-input {
+    max-width: 75px;
+}
+
+.role-select {
+    min-width: 175px;
+}
+
+md-input-container .md-errors-spacer {
+    min-height: 0;
+}
+
+.warning {
+    color: orange;
+
+}
+
+.warning-icon {
+    font-size: 40px;
+    margin-right: 25px;
+}
+.search-bar {
+    max-width:90px;
+    margin-bottom: 18px;
+}
+
+.rule-button {
+    margin:0;
+}
+
+h1 {
+    line-height: 1.2em;
+}
+
